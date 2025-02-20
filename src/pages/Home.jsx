@@ -1,8 +1,9 @@
+import TaskBoard from "../Components/TaskBoard/TaskBoard";
 
 const Home = () => {
     return (
         <div>
-            <h1>HELLLLLLLLLLLOOOOO</h1>
+            <TaskBoard></TaskBoard>
         </div>
     );
 };
