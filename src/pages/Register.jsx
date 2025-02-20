@@ -2,13 +2,13 @@ import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
-import { AuthContext } from '../providers/AuthProvider';
 import registerImg from '../assets/background.jpg'
+import { AuthContext } from '../providers/AuthProvider';
 
 const Register = () => {
 
 
-    const { handleRegister, manageProfile } = useContext(AuthContext);
+    const { createUser, updateUserProfile } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
@@ -33,9 +33,9 @@ const Register = () => {
             return;
         }
 
-        handleRegister(email, password)
+        createUser(email, password)
             .then(result => {
-                manageProfile(name, photo);
+                updateUserProfile(name, photo);
                 Swal.fire({
                     position: "center",
                     icon: "success",
@@ -104,7 +104,7 @@ const Register = () => {
                                 required
                             />
                         </div>
-                        <button type="submit" className="btn border-none bg-blue-600 hover:bg-blue-800 text-white font-bold font-Exo text-lg w-full">
+                        <button  type="submit" className="btn border-none bg-blue-600 hover:bg-blue-800 text-white font-bold font-Exo text-lg w-full">
                             Register
                         </button>
                         <p className=" text-center   text-lg font-bold">

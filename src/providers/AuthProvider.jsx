@@ -32,7 +32,7 @@ const AuthProvider = ({ children }) => {
         return signInWithPopup(auth, googleProvider)
     }
 
-    const logOut = async () => {
+    const logOut =  () => {
         setLoading(true)
         return signOut(auth)
     }

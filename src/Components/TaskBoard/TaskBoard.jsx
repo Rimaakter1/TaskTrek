@@ -1,9 +1,17 @@
-import { useState } from "react";
-import { Menu, Home, User, Settings, LogOut, StickyNote, BookUp2, List, ClipboardCheck } from "lucide-react";
+import { useContext, useState } from "react";
+import { Menu, Home, User, Settings, StickyNote, BookUp2, List } from "lucide-react";
+import { AuthContext } from "../../providers/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const TaskBoard = () => {
+    const {  logOut } = useContext(AuthContext);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+const navigate =useNavigate()
+    const handleLogout = () => {
+        logOut().then(() => {
+            navigate('/login');
+        });
+    };
     return (
         <div className="flex h-screen bg-gray-100">
             <div className={`bg-blue-600 text-white ${isSidebarOpen ? 'w-64' : 'w-16'} transition-all`}>
@@ -30,7 +38,8 @@ const TaskBoard = () => {
 
                     </div>
                     <NavItem icon={<Settings />} label="Settings" isSidebarOpen={isSidebarOpen} />
-                    <NavItem icon={<LogOut />} label="Logout" isSidebarOpen={isSidebarOpen} />
+                    <button onClick={handleLogout}>Logout</button>
+                    {/* <button onClick={handleLogout} icon={<LogOut />} label="Logout" isSidebarOpen={isSidebarOpen}><button/> */}
                 </nav>
             </div>
             <div className="flex-1 flex flex-col">
