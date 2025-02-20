@@ -4,11 +4,12 @@ import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import registerImg from '../assets/background.jpg'
 import { AuthContext } from '../providers/AuthProvider';
+import axios from 'axios';
 
 const Register = () => {
 
 
-    const { createUser, updateUserProfile } = useContext(AuthContext);
+    const { createUser, updateUserProfile, signInWithGoogle } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
@@ -35,6 +36,8 @@ const Register = () => {
 
         createUser(email, password)
             .then(result => {
+                console.log(result.user.displayName)
+                console.log(result.user.uid, result.user.displayName, result.user.email, result.user.photoURL);
                 updateUserProfile(name, photo);
                 Swal.fire({
                     position: "center",
@@ -48,6 +51,41 @@ const Register = () => {
             .catch(err => {
                 toast.error(err.message);
             });
+    };
+
+    const googleLogin = async () => {
+        try {
+            const data = await signInWithGoogle();
+            console.log(data);
+            const response = await axios.post(`http://localhost:5000/users/${data?.user?.email}`, {
+                name: data?.user?.displayName,
+                image: data?.user?.photoURL,
+                email: data?.user?.email,
+                userID: data?.user?.uid,
+                withCredential: true,
+            });
+            console.log(response)
+            if (response.status === 200) {
+                Swal.fire({
+                    title: "Welcome back!",
+                    icon: "success",
+                    draggable: true,
+                });
+                navigate('/')
+            } else if (response.status === 201) {
+                Swal.fire({
+                    title: response.data.message || "Google login successful!",
+                    icon: "success",
+                    draggable: true,
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: error.response?.data?.message || "Google login failed. Please try again.",
+            });
+        }
     };
 
 
@@ -104,8 +142,14 @@ const Register = () => {
                                 required
                             />
                         </div>
-                        <button  type="submit" className="btn border-none bg-blue-600 hover:bg-blue-800 text-white font-bold font-Exo text-lg w-full">
+                        <button type="submit" className="btn border-none bg-blue-600 hover:bg-blue-800 text-white font-bold font-Exo text-lg w-full">
                             Register
+                        </button>
+                        <button
+                            onClick={googleLogin}
+                            className=" w-full   text-lg font-bold text-gray-700 hover:bg-primary border py-2 border-blue-900 rounded-xl hover:text-white mt-4"
+                        >
+                            Login with Google
                         </button>
                         <p className=" text-center   text-lg font-bold">
                             Already have an account?

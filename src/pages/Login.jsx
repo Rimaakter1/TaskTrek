@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../providers/AuthProvider';
 import backgroundImg from '../assets/loginBackground.avif'
+import axios from 'axios';
 
 const Login = () => {
     const { signInWithGoogle, handleLogin } = useContext(AuthContext);
@@ -12,24 +13,35 @@ const Login = () => {
 
     const googleLogin = async () => {
         try {
-            const result = await signInWithGoogle();
-            if (result) {
+            const data = await signInWithGoogle();
+            console.log(data);
+            const response = await axios.post(`http://localhost:5000/users/${data?.user?.email}`, {
+                name: data?.user?.displayName,
+                image: data?.user?.photoURL,
+                email: data?.user?.email,
+                userID: data?.user?.uid,
+                withCredential: true,
+            });
+            console.log(response)
+            if (response.status === 200) {
+            Swal.fire({
+                title: "Welcome back!",
+                icon: "success",
+                draggable: true,
+            });
+            navigate('/')
+            } else if (response.status === 201) {
                 Swal.fire({
-                    position: "center",
+                    title: response.data.message || "Google login successful!",
                     icon: "success",
-                    title: "Logged in successfully with Google!",
-                    showConfirmButton: false,
-                    timer: 1500
+                    draggable: true,
                 });
-                navigate(location?.state ? location.state : "/");
             }
         } catch (error) {
             Swal.fire({
-                position: "center",
                 icon: "error",
-                title: "Failed to login with Google!",
-                text: error.message || "Please try again.",
-                showConfirmButton: true
+                title: "Oops...",
+                text: error.response?.data?.message || "Google login failed. Please try again.",
             });
         }
     };
