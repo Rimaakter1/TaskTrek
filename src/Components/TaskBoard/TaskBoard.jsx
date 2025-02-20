@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, Home, User, Settings } from "lucide-react";
+import { Menu, Home, User, Settings, LogOut, StickyNote, BookUp2, List, ClipboardCheck } from "lucide-react";
 
 const TaskBoard = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -12,9 +12,25 @@ const TaskBoard = () => {
                     <Menu onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="cursor-pointer" />
                 </div>
                 <nav className="mt-4 space-y-4">
-                    <NavItem icon={<Home />} label="Home" isSidebarOpen={isSidebarOpen} />
-                    <NavItem icon={<User />} label="Profile" isSidebarOpen={isSidebarOpen} />
+                    <div>
+                        <NavItem icon={<Home />} label="Home" isSidebarOpen={isSidebarOpen} />
+                        <NavItem icon={<User />} label="Profile" isSidebarOpen={isSidebarOpen} />
+
+                        {
+                            isSidebarOpen && <h4 className="mt-8 mb-2 ml-5">TASKS</h4>
+                        }
+                        <NavItem icon={< BookUp2 />
+                        } label="Upcoming" isSidebarOpen={isSidebarOpen} />
+                        <NavItem icon={<List />
+
+                        } label="Today" isSidebarOpen={isSidebarOpen} />
+
+                        <NavItem icon={<StickyNote />
+                        } label="Sticky Wall" isSidebarOpen={isSidebarOpen} />
+
+                    </div>
                     <NavItem icon={<Settings />} label="Settings" isSidebarOpen={isSidebarOpen} />
+                    <NavItem icon={<LogOut />} label="Logout" isSidebarOpen={isSidebarOpen} />
                 </nav>
             </div>
             <div className="flex-1 flex flex-col">
