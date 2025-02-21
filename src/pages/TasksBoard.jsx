@@ -26,21 +26,38 @@ const TasksBoard = () => {
 
     const handleDragEnd = (result) => {
         const { destination, source, draggableId } = result;
-        if (!destination) return;
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return;
+        }
 
         const newTasks = [...tasks];
         const taskIndex = newTasks.findIndex(task => task._id === draggableId);
         newTasks[taskIndex].category = destination.droppableId;
-        setTasks(newTasks);
+        const [movedTask] = newTasks.splice(taskIndex, 1);
+        const filteredTasks = newTasks.filter(task => task.category === destination.droppableId);
+        filteredTasks.splice(destination.index, 0, movedTask);
+        const updatedTasks = [
+            ...newTasks.filter(task => task.category !== destination.droppableId),
+            ...filteredTasks
+        ];
+        setTasks(updatedTasks);
 
-        axios.put(`http://localhost:5000/tasks/reorder`, {
+        axios.put(`http://localhost:5000/task/reorder`, {
             taskId: draggableId,
             newCategory: destination.droppableId,
             newIndex: destination.index
-        }).catch(error => {
-            console.error('Error updating task:', error);
-        });
+        })
+            .then(() => {
+                console.log('Task reordered successfully');
+            })
+            .catch(error => {
+                console.error('Error updating task:', error);
+            });
     };
+
 
     const handleDelete = (taskId) => {
         axios.delete(`http://localhost:5000/tasks/${taskId}`)
@@ -52,7 +69,7 @@ const TasksBoard = () => {
         setEditTask(task);
         setEditedTitle(task.title);
         setEditedDescription(task.description);
-        setEditedCategory(task.category); // Set category for editing
+        setEditedCategory(task.category);
         document.getElementById('edit_modal').showModal();
     };
 
@@ -81,7 +98,7 @@ const TasksBoard = () => {
                                 <h2 className="text-xl font-bold text-center mb-4 text-gray-700">{category}</h2>
                                 <div className="space-y-4">
                                     {tasks.filter(task => task.category === category).map((task, index) => (
-                                        <Draggable key={task._id} draggableId={task._id} index={index}>
+                                        <Draggable key={task._id} draggableId={task._id.toString()} index={index}>
                                             {(provided) => (
                                                 <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm hover:shadow-md transition-shadow" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                     <h3 className="font-semibold text-lg text-blue-800">{task.title}</h3>
@@ -102,7 +119,7 @@ const TasksBoard = () => {
                 ))}
             </div>
 
-            {/* DaisyUI Modal */}
+            {/* Modal */}
             <dialog id="edit_modal" className="modal">
                 <form method="dialog" className="modal-box">
                     <h3 className="font-bold text-lg">Edit Task</h3>
@@ -119,7 +136,6 @@ const TasksBoard = () => {
                         className="textarea textarea-bordered w-full mt-4"
                         placeholder="Task Description"
                     />
-                    {/* Dropdown to select category */}
                     <select
                         value={editedCategory}
                         onChange={(e) => setEditedCategory(e.target.value)}
