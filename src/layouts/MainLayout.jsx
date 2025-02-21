@@ -41,9 +41,9 @@ const MainLayout = () => {
                     <header className="bg-white shadow p-4 flex justify-between items-center">
                         <h1 className="text-2xl font-bold">Dashboard</h1>
                         <div className="flex items-center space-x-4">
-                            <span className="text-gray-600">Hello, {user.displayName}</span>
+                            <span className="text-gray-600">Hello, {user?.displayName}</span>
                             <img
-                                src={user.photoURL}
+                                src={user?.photoURL}
                                 alt="User Avatar"
                                 className="w-10 h-10 rounded-full"
                             />
