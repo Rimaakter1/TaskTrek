@@ -40,6 +40,20 @@ const TaskBoard = () => {
         });
     };
 
+
+
+    const handleDelete = (taskId) => {
+        axios.delete(`http://localhost:5000/tasks/${taskId}`)
+            .then(response => {
+                setTasks(tasks.filter(task => task._id !== taskId));
+            })
+            .catch(error => {
+                console.error('Error deleting task:', error);
+            });
+    };
+
+
+
     if (loading) return <p className="text-center text-xl">Loading tasks...</p>;
 
     return (
@@ -69,8 +83,8 @@ const TaskBoard = () => {
                                                         <h3 className="font-semibold text-lg text-blue-800">{task.title}</h3>
                                                         <p className="text-sm text-gray-600">{task.description}</p>
                                                         <div className="flex justify-end space-x-2 mt-2">
-                                                            <button className="px-2 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
-                                                            <button className="px-2 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600">Edit</button>
+                                                            <button onClick={() => handleDelete(task._id)} className="px-2 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+                                                            <button onClick={() => handleEdit(task._id)} className="px-2 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600">Edit</button>
                                                         </div>
                                                     </div>
                                                 )}
