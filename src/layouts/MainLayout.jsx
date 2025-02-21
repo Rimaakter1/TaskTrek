@@ -4,7 +4,7 @@ import { Menu, User, Settings, StickyNote, BookUp2, List, CalendarPlus } from "l
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from '../providers/AuthProvider';
 const MainLayout = () => {
-    const { logOut,user } = useContext(AuthContext);
+    const { logOut, user } = useContext(AuthContext);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const navigate = useNavigate();
 
@@ -25,6 +25,7 @@ const MainLayout = () => {
                         <div>
                             <NavItem to="/" icon={<CalendarPlus />} label="Home" isSidebarOpen={isSidebarOpen} />
                             <NavItem to="/profile" icon={<User />} label="Profile" isSidebarOpen={isSidebarOpen} />
+                            <NavItem to="/tasks-board" icon={<List />} label="Task Board" isSidebarOpen={isSidebarOpen} />
                             <NavItem to="/add-task" icon={<StickyNote />} label="Add Task" isSidebarOpen={isSidebarOpen} />
 
                             {isSidebarOpen && <h4 className="mt-8 mb-2 ml-5">TASKS</h4>}
@@ -51,10 +52,10 @@ const MainLayout = () => {
                     </header>
 
                     <main className="flex-1 p-6 overflow-y-auto">
-                       <Outlet></Outlet>
+                        <Outlet></Outlet>
                     </main>
                 </div>
-            </div>          
+            </div>
         </div>
     );
 };

@@ -6,6 +6,7 @@ import ErrorPage from '../pages/ErrorPage'
 import Profile from '../Components/Profile/Profile'
 import AddTask from '../Components/AddTask/AddTask'
 import Home from '../pages/Home'
+import TasksBoard from '../pages/TasksBoard'
 
 export const router = createBrowserRouter([
     {
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
             {
                 path: 'add-task',
                 element:<AddTask></AddTask>
+            },
+            {
+                path: 'tasks-board',
+                element: <TasksBoard></TasksBoard>  
             }
         ],
     },

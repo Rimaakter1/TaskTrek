@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import TaskBoard from "../TaskBoard/TaskBoard";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const AddTask = () => {
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [category, setCategory] = useState('To-Do');
     const navigate = useNavigate();
+        const { user } = useContext(AuthContext);
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -33,6 +35,7 @@ const AddTask = () => {
             description: taskDescription,
             timestamp: timestamp,
             category: category,
+            email: user?.email,
         };
 
         try {
@@ -97,7 +100,6 @@ const AddTask = () => {
                     </button>
                 </div>
             </form>
-            <TaskBoard></TaskBoard>
         </div>
     );
 };
