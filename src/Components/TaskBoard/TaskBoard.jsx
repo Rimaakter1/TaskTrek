@@ -20,13 +20,24 @@ const TaskBoard = () => {
 
     const handleDragEnd = (result) => {
         const { destination, source, draggableId } = result;
+
         if (!destination) return;
+
         const newTasks = [...tasks];
         const taskIndex = newTasks.findIndex(task => task._id === draggableId);
+        const task = newTasks[taskIndex];
+
         newTasks[taskIndex].category = destination.droppableId;
+
         setTasks(newTasks);
 
-
+        axios.put(`http://localhost:5000/tasks/reorder`, {
+            taskId: task._id,
+            newCategory: destination.droppableId,
+            newIndex: destination.index
+        }).catch(error => {
+            console.error('Error updating task:', error);
+        });
     };
 
     if (loading) return <p className="text-center text-xl">Loading tasks...</p>;
