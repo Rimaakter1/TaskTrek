@@ -14,7 +14,6 @@ const Login = () => {
     const googleLogin = async () => {
         try {
             const data = await signInWithGoogle();
-            console.log(data);
             const response = await axios.post(`https://task-trek-server-eight.vercel.app/users/${data?.user?.email}`, {
                 name: data?.user?.displayName,
                 image: data?.user?.photoURL,
@@ -22,7 +21,6 @@ const Login = () => {
                 userID: data?.user?.uid,
                 withCredential: true,
             });
-            console.log(response)
             if (response.status === 200) {
                 Swal.fire({
                     title: "Welcome back!",

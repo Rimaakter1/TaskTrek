@@ -28,7 +28,6 @@ const Home = () => {
                     setLoading(false);
                 })
                 .catch(error => {
-                    console.error('Error fetching tasks:', error);
                     setLoading(false);
                 });
         }

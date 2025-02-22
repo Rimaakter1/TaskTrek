@@ -34,8 +34,6 @@ const Register = () => {
 
         createUser(email, password)
             .then(result => {
-                console.log(result.user.displayName)
-                console.log(result.user.uid, result.user.displayName, result.user.email, result.user.photoURL);
                 updateUserProfile(name, photo);
                 Swal.fire({
                     position: "center",
@@ -54,7 +52,6 @@ const Register = () => {
     const googleLogin = async () => {
         try {
             const data = await signInWithGoogle();
-            console.log(data);
             const response = await axios.post(`https://task-trek-server-eight.vercel.app/users/${data?.user?.email}`, {
                 name: data?.user?.displayName,
                 image: data?.user?.photoURL,
@@ -62,7 +59,6 @@ const Register = () => {
                 userID: data?.user?.uid,
                 withCredential: true,
             });
-            console.log(response)
             if (response.status === 200) {
                 Swal.fire({
                     title: "Welcome back!",

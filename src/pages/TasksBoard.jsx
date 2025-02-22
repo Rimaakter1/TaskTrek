@@ -22,7 +22,6 @@ const TasksBoard = () => {
                 setLoading(false);
             })
             .catch(error => {
-                console.error('Error fetching tasks:', error);
                 setLoading(false);
             });
     }, [user?.email]);
@@ -50,8 +49,8 @@ const TasksBoard = () => {
             newCategory: destination.droppableId,
             newIndex: destination.index
         })
-            .then(() => console.log('Task reordered successfully'))
-            .catch(error => console.error('Error updating task:', error));
+            .then(() => alert('Task reordered successfully'))
+            .catch(error => alert('Error updating task:', error));
     };
 
     const handleDelete = (taskId) => {
@@ -75,7 +74,6 @@ const TasksBoard = () => {
                         );
                     })
                     .catch(error => {
-                        console.error('Error deleting task:', error);
                         Swal.fire(
                             'Error!',
                             'There was an issue deleting the task.',
@@ -117,7 +115,6 @@ const TasksBoard = () => {
                 );
             })
             .catch(error => {
-                console.error('Error updating task:', error);
                 setTasks(tasks.map(task => task._id === editTask._id ? editTask : task));
                 Swal.fire(
                     'Error!',

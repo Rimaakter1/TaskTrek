@@ -40,10 +40,8 @@ const AddTask = () => {
 
         try {
             const response = await axios.post('https://task-trek-server-eight.vercel.app/tasks', newTask);
-            console.log(response.data);
             navigate('/tasks-board');
         } catch (error) {
-            console.error("Error adding task:", error);
             alert("Failed to add task. Please try again.");
         }
     };

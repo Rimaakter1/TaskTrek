@@ -13,7 +13,7 @@ const Profile = () => {
                 .then(response => {
                     setTasks(response.data);
                 })
-                .catch(error => console.error('Error fetching tasks:', error));
+                .catch(error => alert('Error fetching tasks:', error));
         }
     }, [user]);
 
