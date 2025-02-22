@@ -9,7 +9,7 @@ const Profile = () => {
 
     useEffect(() => {
         if (user) {
-            axios.get(`http://localhost:5000/tasks/${user?.email}`)
+            axios.get(`https://task-trek-server-eight.vercel.app/tasks/${user?.email}`)
                 .then(response => {
                     setTasks(response.data);
                 })

@@ -19,7 +19,7 @@ const Home = () => {
         if (user?.email) {
             setLoading(true);
 
-            axios.get(`http://localhost:5000/tasks/${user.email}`)
+            axios.get(`https://task-trek-server-eight.vercel.app/tasks/${user.email}`)
                 .then(response => {
                     const fetchedTasks = response.data;
                     setTotalTasks(fetchedTasks.length);
@@ -40,7 +40,7 @@ const Home = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:col-span-3">
                     {loading ? (
                         <div className="col-span-3 text-center">
-                           <Loading></Loading>
+                            <Loading></Loading>
                         </div>
                     ) : (
                         <>

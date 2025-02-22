@@ -15,7 +15,7 @@ const Login = () => {
         try {
             const data = await signInWithGoogle();
             console.log(data);
-            const response = await axios.post(`http://localhost:5000/users/${data?.user?.email}`, {
+            const response = await axios.post(`https://task-trek-server-eight.vercel.app/users/${data?.user?.email}`, {
                 name: data?.user?.displayName,
                 image: data?.user?.photoURL,
                 email: data?.user?.email,

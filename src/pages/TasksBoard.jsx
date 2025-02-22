@@ -16,7 +16,7 @@ const TasksBoard = () => {
     const { user } = useContext(AuthContext);
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/tasks/${user?.email}`)
+        axios.get(`https://task-trek-server-eight.vercel.app/tasks/${user?.email}`)
             .then(response => {
                 setTasks(response.data);
                 setLoading(false);
@@ -45,7 +45,7 @@ const TasksBoard = () => {
         ];
         setTasks(updatedTasks);
 
-        axios.put(`http://localhost:5000/task/reorder`, {
+        axios.put(`https://task-trek-server-eight.vercel.app/task/reorder`, {
             taskId: draggableId,
             newCategory: destination.droppableId,
             newIndex: destination.index
@@ -65,7 +65,7 @@ const TasksBoard = () => {
             confirmButtonText: 'Yes, delete it!',
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:5000/tasks/${taskId}`)
+                axios.delete(`https://task-trek-server-eight.vercel.app/tasks/${taskId}`)
                     .then(() => {
                         setTasks(tasks.filter(task => task._id !== taskId));
                         Swal.fire(
@@ -103,7 +103,7 @@ const TasksBoard = () => {
         };
         setTasks(tasks.map(task => task._id === editTask._id ? updatedTask : task));
 
-        axios.put(`http://localhost:5000/tasks/${editTask._id}`, {
+        axios.put(`https://task-trek-server-eight.vercel.app/tasks/${editTask._id}`, {
             title: editedTitle,
             description: editedDescription,
             category: editedCategory
