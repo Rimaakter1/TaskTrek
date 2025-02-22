@@ -24,12 +24,12 @@ const Login = () => {
             });
             console.log(response)
             if (response.status === 200) {
-            Swal.fire({
-                title: "Welcome back!",
-                icon: "success",
-                draggable: true,
-            });
-            navigate('/')
+                Swal.fire({
+                    title: "Welcome back!",
+                    icon: "success",
+                    draggable: true,
+                });
+                navigate('/')
             } else if (response.status === 201) {
                 Swal.fire({
                     title: response.data.message || "Google login successful!",
@@ -67,7 +67,7 @@ const Login = () => {
     };
 
     return (
-        <div className="relative h-screen bg-cover bg-center"
+        <div className="relative h-screen bg-cover bg-center px-2"
             style={{ backgroundImage: `url(${backgroundImg})` }}
         >
             <div className="absolute inset-0 bg-gradient-to-l from-black via-transparent to-gray-500"></div>

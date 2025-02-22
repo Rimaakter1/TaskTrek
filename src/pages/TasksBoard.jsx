@@ -2,6 +2,9 @@ import { useContext, useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import axios from 'axios';
 import { AuthContext } from '../providers/AuthProvider';
+import { FilePenLine, Trash2 } from 'lucide-react';
+import Swal from 'sweetalert2';
+import Loading from '../Components/Loading';
 
 const TasksBoard = () => {
     const [tasks, setTasks] = useState([]);
@@ -26,10 +29,7 @@ const TasksBoard = () => {
 
     const handleDragEnd = (result) => {
         const { destination, source, draggableId } = result;
-        if (
-            destination.droppableId === source.droppableId &&
-            destination.index === source.index
-        ) {
+        if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
             return;
         }
 
@@ -50,19 +50,40 @@ const TasksBoard = () => {
             newCategory: destination.droppableId,
             newIndex: destination.index
         })
-            .then(() => {
-                console.log('Task reordered successfully');
-            })
-            .catch(error => {
-                console.error('Error updating task:', error);
-            });
+            .then(() => console.log('Task reordered successfully'))
+            .catch(error => console.error('Error updating task:', error));
     };
 
-
     const handleDelete = (taskId) => {
-        axios.delete(`http://localhost:5000/tasks/${taskId}`)
-            .then(() => setTasks(tasks.filter(task => task._id !== taskId)))
-            .catch(error => console.error('Error deleting task:', error));
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`http://localhost:5000/tasks/${taskId}`)
+                    .then(() => {
+                        setTasks(tasks.filter(task => task._id !== taskId));
+                        Swal.fire(
+                            'Deleted!',
+                            'Your task has been deleted.',
+                            'success'
+                        );
+                    })
+                    .catch(error => {
+                        console.error('Error deleting task:', error);
+                        Swal.fire(
+                            'Error!',
+                            'There was an issue deleting the task.',
+                            'error'
+                        );
+                    });
+            }
+        });
     };
 
     const handleEdit = (task) => {
@@ -74,38 +95,67 @@ const TasksBoard = () => {
     };
 
     const handleEditSave = () => {
+        const updatedTask = {
+            ...editTask,
+            title: editedTitle,
+            description: editedDescription,
+            category: editedCategory
+        };
+        setTasks(tasks.map(task => task._id === editTask._id ? updatedTask : task));
+
         axios.put(`http://localhost:5000/tasks/${editTask._id}`, {
             title: editedTitle,
             description: editedDescription,
             category: editedCategory
         })
             .then(() => {
-                setTasks(tasks.map(task => task._id === editTask._id ? { ...task, title: editedTitle, description: editedDescription, category: editedCategory } : task));
                 document.getElementById('edit_modal').close();
+                Swal.fire(
+                    'Updated!',
+                    'Your task has been updated.',
+                    'success'
+                );
             })
-            .catch(error => console.error('Error updating task:', error));
+            .catch(error => {
+                console.error('Error updating task:', error);
+                setTasks(tasks.map(task => task._id === editTask._id ? editTask : task));
+                Swal.fire(
+                    'Error!',
+                    'There was an issue updating the task.',
+                    'error'
+                );
+            });
     };
 
-    if (loading) return <p className="text-center text-xl">Loading tasks...</p>;
+    if (loading) return <Loading></Loading>;
 
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex space-x-6 p-6 bg-gray-100 min-h-screen">
+            <div className="flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0 p-4 bg-gray-100 min-h-screen">
                 {['To-Do', 'In Progress', 'Done'].map(category => (
                     <Droppable droppableId={category} key={category}>
                         {(provided) => (
-                            <div className="w-1/3 p-4 bg-white rounded-lg shadow-lg" ref={provided.innerRef} {...provided.droppableProps}>
+                            <div
+                                className="w-full md:w-1/3 p-4 bg-white rounded-lg shadow-lg"
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                            >
                                 <h2 className="text-xl font-bold text-center mb-4 text-gray-700">{category}</h2>
                                 <div className="space-y-4">
                                     {tasks.filter(task => task.category === category).map((task, index) => (
                                         <Draggable key={task._id} draggableId={task._id.toString()} index={index}>
                                             {(provided) => (
-                                                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm hover:shadow-md transition-shadow" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                                <div
+                                                    className="p-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                >
                                                     <h3 className="font-semibold text-lg text-blue-800">{task.title}</h3>
                                                     <p className="text-sm text-gray-600">{task.description}</p>
                                                     <div className="flex justify-end space-x-2 mt-2">
-                                                        <button onClick={() => handleDelete(task._id)} className="px-2 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
-                                                        <button onClick={() => handleEdit(task)} className="px-2 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600">Edit</button>
+                                                        <button onClick={() => handleDelete(task._id)} className="px-2 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"><Trash2 /></button>
+                                                        <button onClick={() => handleEdit(task)} className="px-2 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600"><FilePenLine /></button>
                                                     </div>
                                                 </div>
                                             )}
@@ -119,7 +169,6 @@ const TasksBoard = () => {
                 ))}
             </div>
 
-            {/* Modal */}
             <dialog id="edit_modal" className="modal">
                 <form method="dialog" className="modal-box">
                     <h3 className="font-bold text-lg">Edit Task</h3>

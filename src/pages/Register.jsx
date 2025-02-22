@@ -7,8 +7,6 @@ import { AuthContext } from '../providers/AuthProvider';
 import axios from 'axios';
 
 const Register = () => {
-
-
     const { createUser, updateUserProfile, signInWithGoogle } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -92,7 +90,7 @@ const Register = () => {
     return (
         <div className='bg-gray-200 p-2'>
             <div className="flex flex-col-reverse lg:flex-row w-full md:w-10/12 mx-auto  pt-0 lg:py-14">
-                <div className="md:w-1/2 w-full lg:h-screen p-8 bg-white  rounded-l-lg shadow-md">
+                <div className="md:w-1/2 w-full lg:h-screen p-4 lg:p-8 bg-white rounded-none  lg:rounded-l-lg shadow-md">
                     <h2 className="text-2xl font-bold text-center text-gray-700  font-Exo">Registration</h2>
                     <form onSubmit={handleSubmit} className="lg:space-y-2">
                         <div className="form-control">
@@ -160,7 +158,7 @@ const Register = () => {
                     </form>
                 </div>
                 <div className='w-full md:w-1/2  lg:h-screen'>
-                    <img src={registerImg} className='lg:h-screen object-cover w-full rounded-r-lg' alt="" />
+                    <img src={registerImg} className='lg:h-screen object-cover w-full   rounded-none lg:rounded-r-lg' alt="" />
                 </div>
             </div>
         </div>
